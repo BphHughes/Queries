@@ -29,11 +29,15 @@ namespace ProgrammingLanguages
         where l.Name.Contains("C#") || l.ChiefDeveloper.Contains("Microsoft")
         select l;
         PrettyPrintAll(cSharpMicro);
-
-//Method Syntax for one operation. Queries all languages with predecessor Lisp
+    
+ //Method Syntax for one operation. Queries all languages with predecessor Lisp, orders by Language name, and prints to console
         var lispQuery = languages.Where(l => l.Predecessors.Contains("Lisp"));
-        Console.WriteLine(lispQuery.Count());
-        PrettyPrintAll(lispQuery);
+        IEnumerable<Language> lispOrder = lispQuery.OrderBy(l => l.Name);
+        Console.WriteLine($"There are {lispOrder.Count()} languages that come from Lisp:");
+        foreach (Language element in lispOrder)
+        {
+          Console.WriteLine($"\n{element.Name.ToUpper()} that has predecessors {element.Predecessors}");
+        }
 
 //Query syntax for multiple queries: This code finds languages launched between 1995 and 2005
         var timeQuery = from l in languages
