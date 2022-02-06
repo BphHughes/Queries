@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace ProgrammingLanguages
+{
+  class Program
+  {
+    static void Main()
+    {
+      List<Language> languages = File.ReadAllLines("./languages.tsv")
+        .Skip(1)
+        .Select(line => Language.FromTsv(line))
+        .ToList();
+
+//Uses Prettify() on every element in languages
+        foreach (Language lang in languages)
+        {
+         Console.WriteLine(lang.Prettify());
+        }
+
+// MethodSyntax as only one operation - this code prints a string describing the name, year created and chief developer of each language in 'languages'
+        var langInfo = languages.Select(l => $"{l.Name.ToUpper()}\nYear created: {l.Year} \nChief Developer: {l.ChiefDeveloper}\n");      
+        PrintAll(langInfo);
+
+//Queries languages with C# name and uses Prettify()
+        var cSharpMicro = from l in languages
+        where l.Name.Contains("C#") || l.ChiefDeveloper.Contains("Microsoft")
+        select l;
+        PrettyPrintAll(cSharpMicro);
+
+//Method Syntax for one operation. Queries all languages with predecessor Lisp
+        var lispQuery = languages.Where(l => l.Predecessors.Contains("Lisp"));
+        Console.WriteLine(lispQuery.Count());
+        PrettyPrintAll(lispQuery);
+
+//Query syntax for multiple queries: This code finds languages launched between 1995 and 2005
+        var timeQuery = from l in languages
+        where l.Year >= 1995 && l.Year <= 2005
+        select $"{l.Name} - launched {l.Year}";
+        Console.WriteLine($"There were {timeQuery.Count()} languages launched between 1995 and 2005: \n");
+        PrintAll(timeQuery);
+        
+
+  
+    
+
+        }//End of Main()
+
+
+//METHODS
+
+//Prints Prettify() for every element in langs
+public static void PrettyPrintAll(IEnumerable<Language> langs)
+  {
+    foreach (Language element in langs)
+    {
+      Console.WriteLine(element.Prettify());
+    }
+  }
+
+//Prints each element of list argument
+public static void PrintAll(IEnumerable<Object> list)
+{
+  foreach (Object element in list)
+  {
+    Console.WriteLine(element);
+  }
+}
+
+
+
+
+    }
+}
+
+
